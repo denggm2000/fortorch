@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
      rm -rf /var/lib/apt/lists/*
 
 
-ENV PYTHON_VERSION=3.5
+ENV PYTHON_VERSION=3.6
 RUN curl -o ~/miniconda.sh -O  https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
      chmod +x ~/miniconda.sh && \
      ~/miniconda.sh -b -p /opt/conda && \     
@@ -25,7 +25,8 @@ RUN curl -o ~/miniconda.sh -O  https://repo.continuum.io/miniconda/Miniconda3-la
      /opt/conda/bin/conda create -y --name pytorch-py$PYTHON_VERSION python=$PYTHON_VERSION numpy pyyaml scipy ipython mkl&& \
      /opt/conda/bin/conda clean -ya 
 ENV PATH /opt/conda/envs/pytorch-py$PYTHON_VERSION/bin:$PATH
-RUN conda install --name pytorch-py$PYTHON_VERSION -c pytorch magma-cuda80
+COPY /magma-cuda80-2.3.0-1.tar.bz2 /tmp/magma-cuda80-2.3.0-1.tar.bz2
+RUN conda install --name pytorch-py$PYTHON_VERSION /tmp/magma-cuda80-2.3.0-1.tar.bz2
 # This must be done before pip so that requirements.txt is available
 WORKDIR /opt/pytorch
 COPY . .
